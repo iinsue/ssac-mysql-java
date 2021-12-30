@@ -2,6 +2,7 @@ package madang;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,43 +32,23 @@ public class Madang {
         }
     }
 
-    public void select() {
-        String sql = "select bookid, bookname, publisher, price from book";
-
-        try {
-            //Statement 객체를 생성
-            Statement stmt = con.createStatement();
-            // 쿼리 실행 및 실행 결과를 반환
-            ResultSet rs = stmt.executeQuery(sql);
-            // 실행 결과를 출력
-            while(rs.next()) {
-                System.out.print(rs.getInt("bookid") + "\t");
-                System.out.print(rs.getString("bookname") + "\t");
-				System.out.print(rs.getString("publisher") + "\t");
-				System.out.println(rs.getInt("price"));
-            }
-        } catch (SQLException e) {
-            System.out.println("쿼리 실행 오류");
-            e.printStackTrace();
-        } finally {
-            if(con != null) {
-                try {
-                    con.close();
-                } catch(SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
     public void select(String keyword) {
-        String sql = "select bookid, bookname, publisher, price from book where bookname like '%" + keyword + "%'";
+
+        // 안전한 코드
+        // #1 쿼리의 구조를 정의 = 변수 부분을 물음표로 마킹 (데이터 타입을 고려하지 않음)
+        String sql = "select bookid, bookname, publisher, price from book where bookname like ?";
 
         try {
-            //Statement 객체를 생성
-            Statement stmt = con.createStatement();
-            // 쿼리 실행 및 실행 결과를 반환
-            ResultSet rs = stmt.executeQuery(sql);
-            // 실행 결과를 출력
+            // #2 PreparedStatement 객체를 생성
+            // connection.prepareSatement 메소드를 이용 (쿼리문의 구조를 파라미터로 전달)
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            // #3 변수에 값을 할당하고 쿼리를 실행
+            // PreparedStatement 객체에서 제공하는 set 메소드를 이용 (데이터 타입을 고려해서 사용)
+            // 쿼리 실행에 별도의 SQL을 전달하지 않아도 됨.
+            stmt.setString(1, '%' + keyword + '%');
+            ResultSet rs = stmt.executeQuery();
+            
             while(rs.next()) {
                 System.out.print(rs.getInt("bookid") + "\t");
                 System.out.print(rs.getString("bookname") + "\t");
