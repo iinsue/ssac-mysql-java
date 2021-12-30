@@ -59,5 +59,34 @@ public class Madang {
             }
         }
     }
+    public void select(String keyword) {
+        String sql = "select bookid, bookname, publisher, price from book where bookname like '%" + keyword + "%'";
+
+        try {
+            //Statement 객체를 생성
+            Statement stmt = con.createStatement();
+            // 쿼리 실행 및 실행 결과를 반환
+            ResultSet rs = stmt.executeQuery(sql);
+            // 실행 결과를 출력
+            while(rs.next()) {
+                System.out.print(rs.getInt("bookid") + "\t");
+                System.out.print(rs.getString("bookname") + "\t");
+				System.out.print(rs.getString("publisher") + "\t");
+				System.out.println(rs.getInt("price"));
+            }
+        } catch (SQLException e) {
+            System.out.println("쿼리 실행 오류");
+            e.printStackTrace();
+        } finally {
+            if(con != null) {
+                try {
+                    con.close();
+                } catch(SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
 }
 
