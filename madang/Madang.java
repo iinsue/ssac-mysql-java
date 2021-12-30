@@ -7,13 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-public class Book {
+public class Madang {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/madang?serverTimezone=Asia/Seoul";
     private static final String DB_USER = "madang";
     private static final String DB_PASSWRD = "madang";
     Connection con;
 
-    public Book() {
+    public Madang() {
         // #1 JDBC 드라이버를 로딩
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

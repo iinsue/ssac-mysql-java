@@ -1,9 +1,9 @@
-import madang.Book;
+import madang.Madang;
 
 public class DbApp {
     
     public static void main(String[] args) {
-        Book book = new Book();
+        Madang book = new Madang();
         book.select();
     }
 }
